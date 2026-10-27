@@ -1,0 +1,55 @@
+/* =====================================================================
+   vt-navegacao.css — a aparência do passo que obedece ao clique.
+
+   Vive junto do `vt-navegacao.js`, e é a metade visual dele: o JS decide
+   QUANDO o passo aparece; isto decide COMO.
+
+   ⚠️ Não traz cor nenhuma de propósito. O tema do Mira manda na cor
+   (`var(--mira-primary)` e afins), e cor escrita aqui venceria o tema em
+   silêncio — o deck sairia com a paleta errada e sem erro nenhum.
+
+   Cole no `<style>` do deck, ou sirva como `mira/vt-navegacao.css`.
+   ===================================================================== */
+
+/* O passo fechado. `visibility` além de `opacity` porque elemento invisível
+   mas clicável ainda rouba o cursor e é lido por leitor de tela. */
+.passo {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(14px);
+    transition: opacity .45s ease, transform .45s ease, visibility 0s linear .45s;
+}
+
+.passo-visivel {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: opacity .45s ease, transform .45s ease, visibility 0s;
+}
+
+/* Variantes, para o passo que não deve subir. Escolha uma por elemento. */
+.passo.passo-esquerda  { transform: translateX(-22px); }
+.passo.passo-direita   { transform: translateX(22px); }
+.passo.passo-escala    { transform: scale(.94); }
+.passo.passo-sem-gesto { transform: none; }
+
+/* ⚠️ Acessibilidade, e não é enfeite: quem marcou "reduzir movimento" no
+   sistema sente enjoo com deslocamento. O passo continua aparecendo — só
+   deixa de se mexer. Uma apresentação que passa mal quem assiste falhou. */
+@media (prefers-reduced-motion: reduce) {
+    .passo,
+    .passo-visivel {
+        transform: none;
+        transition: opacity .2s ease, visibility 0s;
+    }
+}
+
+/* Impressão e exportação em PDF: tudo visível. Passo escondido no papel é
+   conteúdo perdido, e é assim que um deck vira PDF pela metade. */
+@media print {
+    .passo {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+    }
+}
